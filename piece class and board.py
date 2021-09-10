@@ -1,9 +1,11 @@
+# Class to store piece attributes like colour and type
 class Piece:
     def __init__(self, colour, pieceType, pieceSymbol):
         self.colour = colour
         self.pieceType = pieceType
         self.pieceSymbol = pieceSymbol
 
+# Initalises the piece objects
 wp = Piece("white", "pawn", "♙")
 wr = Piece("white", "rook", "♖")
 wkn = Piece("white", "knight", "♘")
@@ -18,6 +20,7 @@ bb = Piece("black", "bishop", "♝")
 bq = Piece("black", "queen", "♛")
 bk = Piece("black", "king", "♚")
 
+# Class to store the current state and last known legal state of the board
 class BoardState:
     board = [[0,0,0,0,0,0,0,0],
              [0,0,0,0,0,0,0,0],
