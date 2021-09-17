@@ -16,7 +16,7 @@ class Piece:
 
 # Class to group together piece initialisation
 class Pieces:
-    def __init__(self):scan
+    def __init__(self):
         # Initalises the piece objects and passes their attributes
         self.wp = Piece("white", "pawn", "♙")
         self.wr = Piece("white", "rook", "♖")
