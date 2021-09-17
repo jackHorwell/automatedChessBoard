@@ -10,8 +10,8 @@ stockfish = Stockfish(parameters={"Threads": 2, "Minimum Thinking Time": 30})
 # Class to store piece attributes like colour and type
 class Piece:
     def __init__(self, colour, pieceType, icon):
-        self.colour = "white"
-        self.pieceType = "pieceType"
+        self.colour = colour
+        self.pieceType = pieceType
         self.icon = icon
 
 # Class to group together piece initialisation
@@ -34,15 +34,11 @@ class Pieces:
 
 # Class to store the current state and last known legal state of the board
 class BoardRecord:
-
-    def __init__(self):
-        
+    def __init__(self, p): 
         # Stack to store previous move
         self.previousMoves = []
         
         # Creates a 2D array to store piece locations
-        p = Pieces()
-        
         self.board = [[p.wr,p.wkn,p.wb,p.wq,p.wk,p.wb,p.wkn,p.wr],
                  [p.wp,p.wp,p.wp,p.wp,p.wp,p.wp,p.wp,p.wp],
                  [0,0,0,0,0,0,0,0],
@@ -147,15 +143,15 @@ def reportChange():
 # Function to tell player where to move pieces
 def moveComputerPieces(moveFrom, moveTo, move):
     # Tells user which piece to pick up, checks for piece removal
-    GPIO.output(rowPins[moveFrom[0]], 1)
+    GPIO.output(rowPins[moveFrom[1]], 1)
     print(f"Move piece from {move[0:2]}")
-    while GPIO.input(columnPins[moveFrom[1]]):
+    while GPIO.input(columnPins[moveFrom[0]]):
         pass
     GPIO.output(rowPins[moveFrom[1]], 0)
 
     # Checks if a piece is being taken, if so tells user to remove it
     board = currentBoard.getBoard()
-    if board[moveTo[0]][moveTo[1]] != 0:
+    if board[moveTo[1]][moveTo[0]] != 0:
         GPIO.output(rowPins[moveTo[1]], 1)
         print(f"Remove piece from {move[2:]}")
         while GPIO.input(columnPins[moveTo[0]]):
@@ -193,15 +189,19 @@ def getPlayerMove():
 # Function to get the AI to generate a move
 def generateEnemyMove():
     move = stockfish.get_best_move()
-    fromMove = [int(move[1]) - 1, ord(move[0]) - 97]
-    toMove = [int(move[3]) - 1, ord(move[2]) - 97]
+    # Splits move into where it's moving from and where it's moving to
+    # Converts letters into their corresponding alphabet
+    # Both arrays have: column then row
+    fromMove = [ord(move[0]) - 97, int(move[1]) - 1]
+    toMove = [ord(move[2]) - 97, int(move[3]) - 1]
+    
     currentBoard.setBoard(fromMove, toMove, move)
 
     currentBoard.getBoard()
     moveComputerPieces(fromMove, toMove, move)
 
-currentBoard = BoardRecord()
-legalBoard = BoardRecord()
+p = Pieces()
+currentBoard = BoardRecord(p)
 pinSetup()
 
 getPlayerMove()
