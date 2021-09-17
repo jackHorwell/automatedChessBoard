@@ -7,6 +7,9 @@ from stockfish import Stockfish
 stockfish = Stockfish("/home/pi/Downloads/a-stockf")
 stockfish = Stockfish(parameters={"Threads": 2, "Minimum Thinking Time": 30})
 
+# 97 is the ASCII code for a, using this we can reduce this down to a numeric form
+asciiA = 97
+
 # Class to store piece attributes like colour and type
 class Piece:
     def __init__(self, colour, pieceType, icon):
@@ -167,6 +170,15 @@ def moveComputerPieces(moveFrom, moveTo, move):
 
     resetRowPins()
 
+# Function to convert move to chess notation (for Stockfish)
+# Example: "a2"
+def convertToChessNotation(move):
+    return chr(ord('a') + move[0]) + str(move[1] + 1)
+
+# Function to convert chess notation to move
+# Example: [1, 1]
+def convertToMove(chessNotation):
+    return [ord(chessNotation[0]) - asciiA, int(chessNotation[1]) - 1]
 
 # Function to obtain the move a player makes
 def getPlayerMove():
@@ -175,7 +187,7 @@ def getPlayerMove():
     toMove = reportChange()
     print(f"To {toMove}")
 
-    move = chr(ord('a') + fromMove[0]) + str(fromMove[1] + 1) + chr(ord('a') + toMove[0]) + str(toMove[1] + 1)
+    move = convertToChessNotation(fromMove) + toChessNotation(toMove)
 
     if stockfish.is_move_correct(move):
         print("legal shmegle")
@@ -187,13 +199,13 @@ def getPlayerMove():
         return
 
 # Function to get the AI to generate a move
-def generateEnemyMove():
+def generateMove():
     move = stockfish.get_best_move()
     # Splits move into where it's moving from and where it's moving to
     # Converts letters into their corresponding alphabet
     # Both arrays have: column then row
-    fromMove = [ord(move[0]) - 97, int(move[1]) - 1]
-    toMove = [ord(move[2]) - 97, int(move[3]) - 1]
+    fromMove = convertToMove(move[0:2])
+    toMove = convertToMove(move[2:4])
     
     currentBoard.setBoard(fromMove, toMove, move)
 
