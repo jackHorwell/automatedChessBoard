@@ -126,6 +126,9 @@ def scanCurrentBoard():
 
 # Takes the current state of the board and repeatedly checks
 # for a change. Once found will return the position of the change
+"""
+Could optimise with wait for edge?
+"""
 def reportChange():
     oldBoard = scanCurrentBoard()
     
@@ -148,8 +151,7 @@ def moveComputerPieces(moveFrom, moveTo, move):
     # Tells user which piece to pick up, checks for piece removal
     GPIO.output(rowPins[moveFrom[1]], 1)
     print(f"Move piece from {move[0:2]}")
-    while GPIO.input(columnPins[moveFrom[0]]):
-        pass
+    GPIO.wait_for_edge(columnPins[moveFrom[0]], GPIO.FALLING)
     GPIO.output(rowPins[moveFrom[1]], 0)
 
     # Checks if a piece is being taken, if so tells user to remove it
@@ -157,15 +159,13 @@ def moveComputerPieces(moveFrom, moveTo, move):
     if board[moveTo[1]][moveTo[0]] != 0:
         GPIO.output(rowPins[moveTo[1]], 1)
         print(f"Remove piece from {move[2:]}")
-        while GPIO.input(columnPins[moveTo[0]]):
-            pass
+        GPIO.wait_for_edge(columnPins[moveTo[0]], GPIO.FALLING)
         GPIO.output(rowPins[moveTo[1]], 0)
 
     # Tells user where to move piece
     GPIO.output(rowPins[moveTo[1]], 1)
     print(f"Move piece to {move[2:]}")
-    while not GPIO.input(columnPins[moveTo[0]]):
-        pass
+    GPIO.wait_for_edge(columnPins[moveTo[0]], GPIO.RISING)
     GPIO.output(rowPins[moveTo[1]], 0)
 
     resetRowPins()
@@ -187,7 +187,7 @@ def getPlayerMove():
     toMove = reportChange()
     print(f"To {toMove}")
 
-    move = convertToChessNotation(fromMove) + toChessNotation(toMove)
+    move = convertToChessNotation(fromMove) + convertToChessNotation(toMove)
 
     if stockfish.is_move_correct(move):
         print("legal shmegle")
@@ -217,4 +217,4 @@ currentBoard = BoardRecord(p)
 pinSetup()
 
 getPlayerMove()
-generateEnemyMove()
+generateMove()
