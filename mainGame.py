@@ -206,11 +206,10 @@ def generateMove():
     # Both arrays have: column then row
     fromMove = convertToMove(move[0:2])
     toMove = convertToMove(move[2:4])
-    
-    currentBoard.setBoard(fromMove, toMove, move)
 
     currentBoard.getBoard()
     moveComputerPieces(fromMove, toMove, move)
+    currentBoard.setBoard(fromMove, toMove, move)
 
 p = Pieces()
 currentBoard = BoardRecord(p)
