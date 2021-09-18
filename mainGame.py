@@ -115,14 +115,7 @@ def scanCurrentBoard():
         GPIO.output(rowPins[row], 0)
 
     return board
-    
-    '''
-    Used for development purposes, delete in final
-    '''
-    for i in range(7, -1, -1):
-        print(" ".join(map(str,board[i])))
 
-    print("\n\n")
 
 # Takes the current state of the board and repeatedly checks
 # for a change. Once found will return the position of the change
@@ -163,7 +156,31 @@ def isOccupied(coordinates):
     else:
         return False
 
+
 # Function to make sure that the pieces are where they're meant to be
+# Recursively calls itself until all pieces are in the correct position
+def checkBoardIsLegal():
+    board = currentBoard.getBoard()
+
+    for row in range(8):
+        resetRowPins()
+        GPIO.output(rowPins[row], 1)
+        for column in range(8):
+            # First checks for pieces where no pieces should be
+            if board[row][column] == 0 and GPIO.input(columnPins[column]) == 1:
+                print(f"Remove piece from: {convertToChessNotation([column, row])}")
+                detectFallingAtPosition([column, row])
+
+                resetRowPins()
+                checkBoardIsLegal()
+
+            # Then checks for empty spaces where pieces should be
+            elif board[row][column] != 0 and GPIO.input(columnPins[column]) == 0:
+                print(f"Place {board[row][column].capitalize()} {board[row][column].pieceType.capitalize()} on {convertToChessNotation([column, row])}")
+                detectRisingAtPosition([column, row])
+
+                resetRowPins()
+                checkBoardIsLegal()
 
 
 # Function to tell player where to move pieces
@@ -231,6 +248,8 @@ def generateMove():
 p = Pieces()
 currentBoard = BoardRecord(p)
 pinSetup()
+
+checkBoardIsLegal()
 
 getPlayerMove()
 generateMove()
