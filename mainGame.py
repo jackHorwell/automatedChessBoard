@@ -143,30 +143,43 @@ def reportChange():
                             resetRowPins()
                             return [column, row]
 
+# Function that waits for a square to turn from on to off
+def detectFallingAtPosition(coordinates):
+    GPIO.output(rowPins[coordinates[1]], 1)
+    GPIO.wait_for_edge(columnPins[coordinates[0]], GPIO.FALLING)
+    GPIO.output(rowPins[coordinates[1]], 0)
+
+# Function that waits for a square to turn from off to on
+def detectRisingAtPosition(coordinates):
+    GPIO.output(rowPins[coordinates[1]], 1)
+    GPIO.wait_for_edge(columnPins[coordinates[0]], GPIO.RISING)
+    GPIO.output(rowPins[coordinates[1]], 0)
+
+# Will return True if there is currently a piece at the given coordinates
+def isOccupied(coordinates):
+    board = currentBoard.getBoard()
+    if board[coordinates[1]][coordinates[0]] != 0:
+        return True
+    else:
+        return False
+
 # Function to make sure that the pieces are where they're meant to be
 
 
 # Function to tell player where to move pieces
 def moveComputerPieces(moveFrom, moveTo, move):
     # Tells user which piece to pick up, checks for piece removal
-    GPIO.output(rowPins[moveFrom[1]], 1)
     print(f"Move piece from {move[0:2]}")
-    GPIO.wait_for_edge(columnPins[moveFrom[0]], GPIO.FALLING)
-    GPIO.output(rowPins[moveFrom[1]], 0)
+    detectFallingAtPosition(moveFrom)
 
-    # Checks if a piece is being taken, if so tells user to remove it
-    board = currentBoard.getBoard()
-    if board[moveTo[1]][moveTo[0]] != 0:
-        GPIO.output(rowPins[moveTo[1]], 1)
+    # Checks if moveTo position is already occupied, if so tells user to remove it
+    if isOccupied(moveTo):
         print(f"Remove piece from {move[2:]}")
-        GPIO.wait_for_edge(columnPins[moveTo[0]], GPIO.FALLING)
-        GPIO.output(rowPins[moveTo[1]], 0)
+        detectFallingAtPosition(moveTo)
 
     # Tells user where to move piece
-    GPIO.output(rowPins[moveTo[1]], 1)
     print(f"Move piece to {move[2:]}")
-    GPIO.wait_for_edge(columnPins[moveTo[0]], GPIO.RISING)
-    GPIO.output(rowPins[moveTo[1]], 0)
+    detectRisingAtPosition(moveTo)
 
     resetRowPins()
 
@@ -182,16 +195,20 @@ def convertToMove(chessNotation):
 
 # Function to obtain the move a player makes
 def getPlayerMove():
-    fromMove = reportChange()
-    print(f"From: {fromMove}")
-    toMove = reportChange()
-    print(f"To {toMove}")
+    moveFrom = reportChange()
+    print(f"From: {moveFrom}")
+    moveTo = reportChange()
+    print(f"To {moveTo}")
 
-    move = convertToChessNotation(fromMove) + convertToChessNotation(toMove)
+    if isOccupied(moveTo):
+        print("Place down piece")
+        detectRisingAtPosition(moveTo)
+
+    move = convertToChessNotation(moveFrom) + convertToChessNotation(moveTo)
 
     if stockfish.is_move_correct(move):
         print("legal shmegle")
-        currentBoard.setBoard(fromMove, toMove, move)
+        currentBoard.setBoard(moveFrom, moveTo, move)
         currentBoard.getBoard()
     else:
         print("Not a legal move")
