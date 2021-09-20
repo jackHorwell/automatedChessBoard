@@ -1,9 +1,7 @@
-import RPi.GPIO as GPIO
 import time
+
+import RPi.GPIO as GPIO
 GPIO.setmode(GPIO.BCM)
-
-
-
 
 # Function that takes the LED number you want to turn on and
 # turns on/off the corresponding pins
@@ -46,9 +44,3 @@ def charlieplexOn(turnOn):
     GPIO.setup(charlieplexingPins[turnOn][1], GPIO.OUT)
     GPIO.output(charlieplexingPins[turnOn][0], GPIO.HIGH)
     GPIO.output(charlieplexingPins[turnOn][1], GPIO.LOW)
-    
-    
-while True:
-    for i in range(17):
-        charlieplexOn(i)
-        time.sleep(0.1)
