@@ -1,7 +1,7 @@
 <h1>ChessMate</h1>
 
 <p>A chess program designed for a physical chessboard that uses reed switches to determine movement and LEDs to communicate computer movement.</p>
-<p>Uses the <a href="https://stockfishchess.org/">Stockfish engine</a> to generate and validate moves, Stockfish is open source software that can be run on linux and more specifically the Raspberry Pi 3.</p>
+<p>Uses the <a href="https://stockfishchess.org/">Stockfish engine</a> to generate and validate moves, Stockfish is open source software that can be run on linux and more specifically the Raspberry Pi 3. I'm using the <a href="https://github.com/zhelyabuzhsky/stockfish">stockfish python package</a> to communicate between my program and the engine, this does not unfortunately support checking for check or stalemate so I will have to search for another module that take a board's current state and detect check or write my own.</p>
 <p>I aim to develop a web application to go alongside this program</p>
 
 <br>
