@@ -6,7 +6,7 @@
 
 <br>
 
-<h2>Main.py</h2>
+<h2>main.py</h2>
 <p>
 Contains the main game logic for the chess program, it can:
 <ul>
@@ -19,7 +19,7 @@ Contains the main game logic for the chess program, it can:
 
 <br>
 
-<h2>Charlieplexing.py</h2>
+<h2>charlieplexing.py</h2>
 <p>
 Called by the main program and contains functions to control the 16 LEDs via charlieplexing:
 <ul>
