@@ -32,8 +32,8 @@ Called by the main program and contains functions to control the 16 LEDs via cha
 
 <h2>TODO</h2>
 <ul>
-  <li>Prevent movement to same position - (in progress)</li>
-  <li>Flash LEDs when illegal move is made</li>
+  <li>Prevent movement to same position - (completed)</li>
+  <li>Flash LEDs when illegal move is made - (in progress)</li>
   <li>Add promotion</li>
   <li>Add castling</li>
   <li>Add LCD functionality and buttons (new file to control LCD?)</li>
