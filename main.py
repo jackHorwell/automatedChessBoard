@@ -225,11 +225,11 @@ def checkForPromotionOpportunity(moveTo, moveFrom):
     board = currentBoard.getBoard()
     promoteTo = ""
     # Checks for white pawns in black back line
-    if moveTo[1] == 7 and board[7][moveFrom[0]].pieceType == "pawn":
+    if moveTo[1] == 7 and board[moveFrom[1]][moveFrom[0]].pieceType == "pawn":
         promoteTo = input("What would you like to promote to: ")
 
     # Checks for black pawns in white back line
-    if moveTo[1] == 0 and board[0][moveFrom[0]].pieceType == "pawn":
+    if moveTo[1] == 0 and board[moveFrom[1]][moveFrom[0]].pieceType == "pawn":
         promoteTo = input("What would you like to promote to: ")
 
     # If promotion is not available then "" is returned
@@ -301,16 +301,24 @@ def getPlayerMove():
     moveTo = reportChange(moveFrom)
     print(f"To {moveTo}")
 
+    # Checks if a pawn can be promoted
+    promotion = checkForPromotionOpportunity(moveTo, moveFrom)
+
     if isOccupied(moveTo):
         print("Place down piece")
         detectRisingAtPosition(moveTo)
-
+    
     # Adds the from move, to move and promotion if available so the AI can understand it
-    move = convertToChessNotation(moveFrom) + convertToChessNotation(moveTo) + checkForPromotionOpportunity(moveTo, moveFrom)
+    move = convertToChessNotation(moveFrom) + convertToChessNotation(moveTo) + promotion
 
     if stockfish.is_move_correct(move):
         print("legal shmegle")
         currentBoard.setBoard(moveFrom, moveTo, move)
+
+        # If player has promoted a piece then board is updated
+        if promotion != "":
+            promotePiece(moveTo, playerColour, promotion)
+        
         currentBoard.getBoard()
     else:
         print("Not a legal move")
@@ -360,3 +368,4 @@ while True:
     if evaluation["type"] == 'mate' and evaluation["value"] == 0:
         while True:
             charlieplexing.slide("fast")
+            
