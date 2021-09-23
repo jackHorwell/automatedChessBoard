@@ -128,10 +128,12 @@ def scanCurrentBoard():
 
 # Takes the current state of the board and repeatedly checks
 # for a change. Once found will return the position of the change
+# Takes an optional paramater if we are checking for movement to a square
+# to prevent the piece being detected twice
 """
 Could optimise with wait for edge?
 """
-def reportChange():
+def reportChange(moveFrom = none):
     resetRowPins()
     oldBoard = scanCurrentBoard()
     
@@ -143,8 +145,9 @@ def reportChange():
                 if newBoard[row] != oldBoard[row]:
                     for column in range(8):
                         if newBoard[row][column] != oldBoard[row][column]:
-                            resetRowPins()
-                            return [column, row]
+                            if moveFrom != [column, row]:
+                                resetRowPins()
+                                return [column, row]
 
 # Function that waits for a square to turn from on to off
 def detectFallingAtPosition(coordinates):
@@ -257,7 +260,7 @@ def convertToMove(chessNotation):
 def getPlayerMove():
     moveFrom = reportChange()
     print(f"From: {moveFrom}")
-    moveTo = reportChange()
+    moveTo = reportChange(moveFrom)
     print(f"To {moveTo}")
 
     if isOccupied(moveTo):
