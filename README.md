@@ -34,8 +34,8 @@ Called by the main program and contains functions to control the 16 LEDs via cha
 <ul>
   <li>Prevent movement to same position - (completed)</li>
   <li>Flash LEDs when illegal move is made - (completed)</li>
-  <li>Add promotion - (in progress)</li>
-  <li>Add castling</li>
+  <li>Add promotion - (completed)</li>
+  <li>Add castling - (in progress)</li>
   <li>Add LCD functionality and buttons (new file to control LCD?)</li>
   <li>Add difficulty settings for AI</li>
   <li>Get program to understand when board is in check/checkmate/stalemate</li>
