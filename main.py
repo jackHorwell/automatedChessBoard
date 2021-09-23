@@ -180,7 +180,7 @@ def detectRisingAtPosition(coordinates):
         # Breaks loop once piece is placed down
         if GPIO.event_detected(columnPins[coordinates[0]]):
             GPIO.remove_event_detect(columnPins[coordinates[0]])
-            charlieplexing.charlturnOnieplexOn(0)
+            charlieplexing.turnOn(0)
             break
         
     #GPIO.wait_for_edge(columnPins[coordinates[0]], GPIO.FALLING)
