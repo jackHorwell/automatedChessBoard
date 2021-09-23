@@ -133,7 +133,7 @@ def scanCurrentBoard():
 """
 Could optimise with wait for edge?
 """
-def reportChange(moveFrom = none):
+def reportChange(moveFrom = None):
     resetRowPins()
     oldBoard = scanCurrentBoard()
     
