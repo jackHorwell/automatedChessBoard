@@ -8,6 +8,7 @@ import charlieplexing
 from stockfish import Stockfish
 stockfish = Stockfish("/home/pi/Downloads/a-stockf")
 stockfish = Stockfish(parameters={"Threads": 2, "Minimum Thinking Time": 30})
+stockfish.set_skill_level(1)
 
 # 97 is the ASCII code for a, using this we can reduce this down to a numeric form
 asciiA = 97
@@ -80,7 +81,8 @@ class BoardRecord:
         self.board[pieceFrom[1]][pieceFrom[0]] = 0
 
         # Adds move made to the previousMoves array
-        self.previousMoves.append(move)
+        if move != "castle":
+            self.previousMoves.append(move)
 
         # Updates the moves made for the engine
         stockfish.set_position(self.previousMoves)
@@ -234,7 +236,25 @@ def checkForPromotionOpportunity(moveTo, moveFrom):
 
     # If promotion is not available then "" is returned
     return promoteTo
-        
+
+# Function to detect if AI or player has castled and tells the user to move the castle
+def checkForCastle(move, fromMove):
+    board = currentBoard.getBoard()
+    if board[fromMove[1]][fromMove[0]].pieceType == "king":
+        # Detects which castling move has been made and moves castle
+        if move == "e1c1": 
+            currentBoard.setBoard([0, 0], [3, 0], "castle")
+            moveComputerPieces([0, 0], [3, 0], "a1c1")
+        elif move == "e1g1":
+            currentBoard.setBoard([7, 0], [5, 0], "castle")
+            moveComputerPieces([7, 0], [5, 0], "h1f1")
+        elif move == "e8c8":
+            currentBoard.setBoard([0, 7], [3, 7], "castle")
+            moveComputerPieces([0, 7], [3, 7], "a8c8")
+        elif move == "e8g8":
+            currentBoard.setBoard([7, 7], [5, 7], "castle")
+            moveComputerPieces([7, 7], [5, 7], "h8f8")
+ 
 
 # Function to make sure that the pieces are where they're meant to be
 # Recursively calls itself until all pieces are in the correct position
@@ -311,6 +331,9 @@ def getPlayerMove():
     # Adds the from move, to move and promotion if available so the AI can understand it
     move = convertToChessNotation(moveFrom) + convertToChessNotation(moveTo) + promotion
 
+    # Checks if player has castled
+    checkForCastle(move, moveFrom)
+
     if stockfish.is_move_correct(move):
         print("legal shmegle")
         currentBoard.setBoard(moveFrom, moveTo, move)
@@ -320,6 +343,7 @@ def getPlayerMove():
             promotePiece(moveTo, playerColour, promotion)
         
         currentBoard.getBoard()
+        
     else:
         print("Not a legal move")
         charlieplexing.allFlash()
@@ -336,8 +360,11 @@ def generateMove():
     fromMove = convertToMove(move[0:2])
     toMove = convertToMove(move[2:4])
 
-    currentBoard.getBoard()
     moveComputerPieces(fromMove, toMove, move)
+    # Checks if player has castled
+    checkForCastle(move, fromMove)
+
+    # Updates board
     currentBoard.setBoard(fromMove, toMove, move)
     checkForPromotion(move, toMove)
 
