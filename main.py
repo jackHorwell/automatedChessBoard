@@ -275,6 +275,7 @@ def getPlayerMove():
         currentBoard.getBoard()
     else:
         print("Not a legal move")
+        charlieplexing.allFlash()
         checkBoardIsLegal()
         getPlayerMove()
         return
