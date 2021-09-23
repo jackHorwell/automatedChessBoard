@@ -157,13 +157,13 @@ def detectFallingAtPosition(coordinates):
     numberCols = [9, 10, 11, 12, 13, 14, 15, 16]
     while True:
         # Lights up position
-        charlieplexing.charlieplexOn(numberRows[coordinates[1]])
-        charlieplexing.charlieplexOn(numberCols[coordinates[0]])
+        charlieplexing.turnOn(numberRows[coordinates[1]])
+        charlieplexing.turnOn(numberCols[coordinates[0]])
 
         # Breaks loop once piece is picked up
         if GPIO.event_detected(columnPins[coordinates[0]]):
             GPIO.remove_event_detect(columnPins[coordinates[0]])
-            charlieplexing.charlieplexOn(0)
+            charlieplexing.turnOn(0)
             break
         
     #GPIO.wait_for_edge(columnPins[coordinates[0]], GPIO.FALLING)
@@ -177,13 +177,13 @@ def detectRisingAtPosition(coordinates):
     numberCols = [9, 10, 11, 12, 13, 14, 15, 16]
     while True:
         # Lights up position
-        charlieplexing.charlieplexOn(numberRows[coordinates[1]])
-        charlieplexing.charlieplexOn(numberCols[coordinates[0]])
+        charlieplexing.turnOn(numberRows[coordinates[1]])
+        charlieplexing.turnOn(numberCols[coordinates[0]])
 
         # Breaks loop once piece is placed down
         if GPIO.event_detected(columnPins[coordinates[0]]):
             GPIO.remove_event_detect(columnPins[coordinates[0]])
-            charlieplexing.charlieplexOn(0)
+            charlieplexing.turnOn(0)
             break
         
     #GPIO.wait_for_edge(columnPins[coordinates[0]], GPIO.FALLING)
