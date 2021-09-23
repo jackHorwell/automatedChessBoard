@@ -49,12 +49,12 @@ def turnOn(led):
 # Function to flash all LEDs 3 times
 def allFlash():
     for i in range(3):
-        for j in range(1000):
+        for j in range(500):
             for k in range(17):
                 turnOn(k)
 
         turnOn(0)
-        time.sleep(0.2)
+        time.sleep(0.1)
 
 
 # Function to turn on each LED one at a time in order
