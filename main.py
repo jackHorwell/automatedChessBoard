@@ -218,6 +218,24 @@ def checkForPromotion(move, toMove):
         print(f"Piece is now {move[-1]}")
 
 
+# Function to determine if a player can promote a piece, if true then
+# the player is asked to which piece he would like to promote
+# Input is then returned
+def checkForPromotionOpportunity(moveTo, moveFrom):
+    board = currentBoard.getBoard()
+    promoteTo = ""
+    # Checks for white pawns in black back line
+    if moveTo[1] == 7 and board[7][moveFrom[0]].pieceType == "pawn":
+        promoteTo = input("What would you like to promote to: ")
+
+    # Checks for black pawns in white back line
+    if moveTo[1] == 0 and board[0][moveFrom[0]].pieceType == "pawn":
+        promoteTo = input("What would you like to promote to: ")
+
+    # If promotion is not available then "" is returned
+    return promoteTo
+        
+
 # Function to make sure that the pieces are where they're meant to be
 # Recursively calls itself until all pieces are in the correct position
 def checkBoardIsLegal():
@@ -287,7 +305,8 @@ def getPlayerMove():
         print("Place down piece")
         detectRisingAtPosition(moveTo)
 
-    move = convertToChessNotation(moveFrom) + convertToChessNotation(moveTo)
+    # Adds the from move, to move and promotion if available so the AI can understand it
+    move = convertToChessNotation(moveFrom) + convertToChessNotation(moveTo) + checkForPromotionOpportunity(moveTo, moveFrom)
 
     if stockfish.is_move_correct(move):
         print("legal shmegle")
@@ -317,7 +336,8 @@ def generateMove():
 p = Pieces()
 p.initialisePieces()
 currentBoard = BoardRecord(p)
-computerColour = "w"
+computerColour = "b"
+playerColour = "w"
 pinSetup()
 
 m = input("")
@@ -328,10 +348,15 @@ while True:
     getPlayerMove()
     checkBoardIsLegal()
     evaluation = stockfish.get_evaluation()
+    print(evaluation)
     if evaluation["type"] == 'mate' and evaluation["value"] == 0:
-        charlieplexing.slideFast()
+        while True:
+            charlieplexing.slide("fast")
     
     generateMove()
     checkBoardIsLegal()
+    evaluation = stockfish.get_evaluation()
+    print(evaluation)
     if evaluation["type"] == 'mate' and evaluation["value"] == 0:
-        charlieplexing.slideFast()
+        while True:
+            charlieplexing.slide("fast")
