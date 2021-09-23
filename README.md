@@ -29,3 +29,15 @@ Called by the main program and contains functions to control the 16 LEDs via cha
   <li><b>bounce</b> - Has the lights slide from one side to the other and goes in reverse once it reaches the end</li>
 </ul>
 </p>
+
+<h2>TODO</h2>
+<ul>
+  <li>Prevent movement to same position - (in progress)</li>
+  <li>Flash LEDs when illegal move is made</li>
+  <li>Add promotion</li>
+  <li>Add castling</li>
+  <li>Add LCD functionality and buttons (new file to control LCD?)</li>
+  <li>Add difficulty settings for AI</li>
+  <li>Get program to understand when board is in check/checkmate/stalemate</li>
+  <li>Make program run on boot</li>
+</ul>
