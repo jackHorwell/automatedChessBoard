@@ -21,7 +21,7 @@ class Piece:
 
 # Class to group together piece initialisation
 class Pieces:
-    def __init__(self):
+    def initialisePieces(self):
         # Initalises the piece objects and passes their attributes
         self.wp = Piece("white", "pawn", "♙")
         self.wr = Piece("white", "rook", "♖")
@@ -290,6 +290,7 @@ def generateMove():
     currentBoard.setBoard(fromMove, toMove, move)
 
 p = Pieces()
+p.initialisePieces()
 currentBoard = BoardRecord(p)
 pinSetup()
 
